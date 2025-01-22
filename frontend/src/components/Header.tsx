@@ -11,8 +11,8 @@ const Header = () => {
     <div className="container mx-auto flex justify-between items-center px-4">
       {/* Logo */}
       <Link to="/" className="flex items-center space-x-2">
-        <div className="text-[#FF4A17] text-2xl md:text-3xl font-bold flex items-center">
-          <span className="text-3xl md:text-4xl">⚒</span>
+        <div className="text-[#FF4A17] text-2xl md:text-2xl font-bold flex items-center">
+          <span className="text-2xl md:text-3xl">⚒</span>
           Larreus repairs & Co LLC.
         </div>
       </Link>

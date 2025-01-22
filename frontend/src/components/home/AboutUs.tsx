@@ -48,7 +48,7 @@ export default function AboutUs() {
             <p className="text-sm text-gray-600">Have any Question?</p>
             <div className="flex items-center gap-2">
               <Phone className="w-5 h-5 text-orange-500" />
-              <span className="text-lg font-semibold">1-555-678-8888</span>
+              <span className="text-lg font-semibold">903-807-8308</span>
             </div>
           </div>
         </div>

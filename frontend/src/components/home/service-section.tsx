@@ -1,38 +1,44 @@
 import { ServiceCard } from "./service-card"
+import electricalServices from "@/assets/icons/electrical-service.png"
+import renovationServices from "@/assets/icons/home-repair.png"
+import plumbingServices from "@/assets/icons/plumbing-maintenance.png"
+import hvacServices from "@/assets/icons/HVAC-service.png"
+import paintingDrywall from "@/assets/icons/house-painting.png"
+import roofingServices from "@/assets/icons/roof-service.png"
 
 const services = [
   {
-    icon: "/placeholder.svg?height=40&width=40",
+    icon: renovationServices,
     title: "Renovation Services",
     description:
       "About Our Renovation Services At Larreus repairs & Co LLC., we offer expert plumbing services for maintenance, repairs, and installations. Our licensed plumbers ensure efficient, reliable water ...",
   },
   {
-    icon: "/placeholder.svg?height=40&width=40",
+    icon: electricalServices,
     title: "Electrical Services",
     description:
       "About Our Electrical Services At Larreus repairs & Co LLC., we offer expert plumbing services for maintenance, repairs, and installations. Our licensed plumbers ensure efficient, reliable water ...",
   },
   {
-    icon: "/placeholder.svg?height=40&width=40",
+    icon: plumbingServices,
     title: "Plumbing Services",
     description:
       "About Our Plumbing Services At Larreus repairs & Co LLC., we offer expert plumbing services for maintenance, repairs, and installations. Our licensed plumbers ensure efficient, reliable water ...",
   },
   {
-    icon: "/placeholder.svg?height=40&width=40",
+    icon: hvacServices,
     title: "HVAC Services",
     description:
       "About Our HVAC Services At Larreus repairs & Co LLC., we offer expert plumbing services for maintenance, repairs, and installations. Our licensed plumbers ensure efficient, reliable water ...",
   },
   {
-    icon: "/placeholder.svg?height=40&width=40",
+    icon: paintingDrywall,
     title: "Painting and Drywall",
     description:
       "About Our Painting and Drywall At Larreus repairs & Co LLC., we offer expert plumbing services for maintenance, repairs, and installations. Our licensed plumbers ensure efficient, reliable ...",
   },
   {
-    icon: "/placeholder.svg?height=40&width=40",
+    icon: roofingServices,
     title: "Roofing Services",
     description:
       "About Our Roofing Services At Larreus repairs & Co LLC., we offer expert plumbing services for maintenance, repairs, and installations. Our licensed plumbers ensure efficient, reliable water ...",

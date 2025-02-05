@@ -14,5 +14,11 @@ npm install
 npm run dev
 ```
 
-### For the backend (not yet implemented)
+### For the backend (still in progress)
+
+```bash
+cd backend
+npm install
+npm start or npm run server
+```
 

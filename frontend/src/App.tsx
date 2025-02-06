@@ -1,11 +1,20 @@
-import HeroPage from "./pages/HeroPage"
-
-
+import { useEffect } from "react"
+import { ToastContainer } from "react-toastify"
+import { RouterProvider } from "react-router-dom"
+import { router } from "./routes"
+import { useAuthStore } from "./store/useAuthStore"
 
 const App = () => {
+  const checkAuth = useAuthStore(state => state.checkAuth)
+
+  useEffect(() => {
+    checkAuth()
+  }, [])
+
   return (
     <div>
-      <HeroPage/>      
+      <ToastContainer />
+      <RouterProvider router={router} />
     </div>
   )
 }

@@ -6,6 +6,10 @@ import ResetPassword from "@/pages/Auth/ResetPassword";
 import RoleProtectedRoute from "@/routes/RoleProtectedRoute";
 import AdminPage from "@/pages/Admin";
 import HeroPage from "@/pages/Home/HeroPage";
+import NotFoundPage from "@/pages/NotFoundPage";
+import ServicesPage from "@/pages/Services";
+import ContactUsPage from "@/pages/ContactUs";
+import ProjectsPage from "@/pages/Projects";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +44,24 @@ export const router = createBrowserRouter([
       </RoleProtectedRoute>
     ),
   },
+  {
+    path: "/projects",
+    element: <ProjectsPage />,
+  },
+  {
+    path: "/services",
+    element: <ServicesPage />,
+  },
+  {
+    path: "/contact",
+    element: <ContactUsPage />,
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />,
+  },
+
+
 ]);
 
 

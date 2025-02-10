@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import AboutUs from "@/components/home/AboutUs";
-import Hero from "@/components/home/Hero";
+import HeroComp from "@/components/home/HeroComp";
 import ServiceSection from "@/components/home/service-section";
 import TopBar from "@/components/TopBar";
 import Navbar from "@/components/Navbar";
@@ -16,7 +16,7 @@ const HeroPage = () => {
       {/* Navigation - Hidden on Mobile */}
       <Navbar />
       {/* Hero Section */}
-      <Hero />
+      <HeroComp />
        {/* About Us Section */}
        <AboutUs/> 
       {/* Service Section */}

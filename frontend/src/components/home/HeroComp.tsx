@@ -29,7 +29,7 @@ export default function Hero() {
 
   return (
     <>
-      {/* Hero Section */}
+      {/* Hero Section fixed */}
       <div className="relative h-[400px] md:h-[600px]">
         {carouselImages.map((image, index) => (
           <img

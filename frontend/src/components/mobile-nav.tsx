@@ -1,11 +1,32 @@
-"use client"
+import { Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/useAuthStore";
 
-import { Menu } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Link } from "react-router-dom"
 
 export function MobileNav() {
+  const navigate = useNavigate();
+  const { isLoggedIn, userData, logout, sendVerificationOtp } = useAuthStore();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
+  const handleVerifyEmail = async () => {
+    const success = await sendVerificationOtp();
+    if (success) {
+      navigate('/email-verify');
+    }
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -23,28 +44,76 @@ export function MobileNav() {
             </div>
           </SheetTitle>
         </SheetHeader>
+
         <div className="flex flex-col space-y-4 mt-8">
-          <Link href="/" className="text-[#FF4A17] font-medium px-2 py-1">
+          {/* Navigation Links */}
+          <Link to="/" className="text-[#FF4A17] font-medium px-2 py-1">
             Homes
           </Link>
-          <Link href="/services" className="text-gray-600 hover:text-[#FF4A17] px-2 py-1">
-            Services
-          </Link>
-          <Link href="/projects" className="text-gray-600 hover:text-[#FF4A17] px-2 py-1">
+          <Link to="/projects" className="text-gray-600 hover:text-[#FF4A17] px-2 py-1">
             Projects
           </Link>
-          <Link href="/blog" className="text-gray-600 hover:text-[#FF4A17] px-2 py-1">
-            Blog
+          <Link to="/services" className="text-gray-600 hover:text-[#FF4A17] px-2 py-1">
+            Services
           </Link>
-          <Link href="/pages" className="text-gray-600 hover:text-[#FF4A17] px-2 py-1">
-            Pages
-          </Link>
-          <Link href="/contact" className="text-gray-600 hover:text-[#FF4A17] px-2 py-1">
+          <Link to="/contact" className="text-gray-600 hover:text-[#FF4A17] px-2 py-1">
             Contact Us
           </Link>
+
+          {/* Auth Section */}
+          <div className="border-t pt-4 mt-4">
+            {isLoggedIn ? (
+              <div className="space-y-2">
+                <div className="px-2 py-1 text-gray-600">
+                  Hello, {userData?.name}
+                </div>
+                
+                {/* Admin Dashboard Link */}
+                {userData?.role === 'admin' && (
+                  <Link
+                    to="/admin"
+                    className="block px-2 py-1 text-gray-600 hover:text-[#FF4A17]"
+                  >
+                    Admin Dashboard
+                  </Link>
+                )}
+
+                {/* Profile/Verify Email */}
+                {userData?.isAccountVerified ? (
+                  <Link
+                    to="/profile"
+                    className="block px-2 py-1 text-gray-600 hover:text-[#FF4A17]"
+                  >
+                    Profile
+                  </Link>
+                ) : (
+                  <button
+                    onClick={handleVerifyEmail}
+                    className="block w-full text-left px-2 py-1 text-gray-600 hover:text-[#FF4A17]"
+                  >
+                    Verify Email
+                  </button>
+                )}
+
+                {/* Logout Button */}
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-2 py-1 text-gray-600 hover:text-[#FF4A17]"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="block px-2 py-1 text-[#FF4A17] font-medium"
+              >
+                Login
+              </Link>
+            )}
+          </div>
         </div>
       </SheetContent>
     </Sheet>
-  )
+  );
 }
-

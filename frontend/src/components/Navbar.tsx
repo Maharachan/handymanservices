@@ -1,10 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/store/useAuthStore";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { isLoggedIn, userData, logout, sendVerificationOtp } = useAuthStore();
 
@@ -21,20 +22,40 @@ const Navbar = () => {
     setIsDropdownOpen(false);
   };
 
+  // Function to check if a path is active
+  const isActivePath = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(path);
+  };
+
   return (
     <nav className="border-b hidden md:block">
       <div className="container mx-auto flex justify-between items-center py-4">
         <div className="flex gap-8 items-center">
-          <Link to="/" className="text-[#FF4A17] font-medium">
-            Homes
+          <Link 
+            to="/" 
+            className={`font-medium ${isActivePath('/') ? 'text-[#FF4A17]' : 'text-gray-600 hover:text-[#FF4A17]'}`}
+          >
+            Home
           </Link>
-          <Link to="/services" className="text-gray-600 hover:text-[#FF4A17]">
+          <Link 
+            to="/services" 
+            className={`${isActivePath('/services') ? 'text-[#FF4A17]' : 'text-gray-600 hover:text-[#FF4A17]'}`}
+          >
             Services
           </Link>
-          <Link to="/projects" className="text-gray-600 hover:text-[#FF4A17]">
+          <Link 
+            to="/projects" 
+            className={`${isActivePath('/projects') ? 'text-[#FF4A17]' : 'text-gray-600 hover:text-[#FF4A17]'}`}
+          >
             Projects
           </Link>
-          <Link to="/contact" className="text-gray-600 hover:text-[#FF4A17]">
+          <Link 
+            to="/contact" 
+            className={`${isActivePath('/contact') ? 'text-[#FF4A17]' : 'text-gray-600 hover:text-[#FF4A17]'}`}
+          >
             Contact Us
           </Link>
         </div>

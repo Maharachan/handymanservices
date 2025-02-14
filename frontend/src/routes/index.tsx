@@ -50,7 +50,16 @@ export const router = createBrowserRouter([
   },
   {
     path: "/services",
-    element: <ServicesPage />,
+    children: [
+      {
+        path: "",
+        element: <ServicesPage />,
+      },
+      {
+        path: ":serviceId",
+        element: <ServicesPage />,
+      },
+    ],
   },
   {
     path: "/contact",
@@ -60,8 +69,6 @@ export const router = createBrowserRouter([
     path: "*",
     element: <NotFoundPage />,
   },
-
-
 ]);
 
 

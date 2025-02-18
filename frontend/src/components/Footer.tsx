@@ -11,7 +11,7 @@ export default function Footer() {
           {/* Company Info Section */}
           <div className="space-y-6">
             <div className="flex items-center space-x-2">
-            <span className="text-3xl md:text-4xl">⚒</span>
+            <img src="/src/assets/logo.png" alt="Logo" className="w-8 h-8 mr-2" />
               <span className="text-xl md:text-2xl font-semibold text-[#FF4A17]">Larreus repairs & Co LLC.</span>
             </div>
 
@@ -33,19 +33,19 @@ export default function Footer() {
               </div>
 
               <div className="flex space-x-4">
-                <Link to="#" className="hover:text-[#FF6B00]">
+                <Link to="https://www.facebook.com/larreusrepairs" className="hover:text-[#FF6B00]">
                   <Facebook className="h-5 w-5" />
                 </Link>
-                <Link to="#" className="hover:text-[#FF6B00]">
+                <Link to="https://www.twitter.com/larreusrepairs" className="hover:text-[#FF6B00]">
                   <Twitter className="h-5 w-5" />
                 </Link>
-                <Link to="#" className="hover:text-[#FF6B00]">
+                <Link to="https://www.instagram.com/larreusrepairs" className="hover:text-[#FF6B00]">
                   <Instagram className="h-5 w-5" />
                 </Link>
-                <Link to="#" className="hover:text-[#FF6B00]">
+                <Link to="https://www.linkedin.com/larreusrepairs" className="hover:text-[#FF6B00]">
                   <Linkedin className="h-5 w-5" />
                 </Link>
-                <Link to="#" className="hover:text-[#FF6B00]">
+                <Link to="https://www.instagram.com/larreusrepairs" className="hover:text-[#FF6B00]">
                   <Send className="h-5 w-5" />
                 </Link>
               </div>

@@ -12,7 +12,7 @@ const Header = () => {
       {/* Logo */}
       <Link to="/" className="flex items-center space-x-2">
         <div className="text-[#FF4A17] text-2xl md:text-2xl font-bold flex items-center">
-          <span className="text-2xl md:text-3xl">⚒</span>
+          <img src="/src/assets/logo.png" alt="Logo" className="w-8 h-8 mr-2" />
           Larreus repairs & Co LLC.
         </div>
       </Link>

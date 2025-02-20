@@ -75,29 +75,7 @@ export default function Hero() {
           </div>
         </div>
       </div>
-      {/* Contact Form */}
-      <div className="bg-[#1C1F33] py-8 px-4">
-        <div className="container mx-auto flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-          <input
-            type="text"
-            placeholder="Your Name"
-            className="flex-1 px-4 py-2 rounded"
-          />
-          <input
-            type="tel"
-            placeholder="Phone Number"
-            className="flex-1 px-4 py-2 rounded"
-          />
-          <input
-            type="text"
-            placeholder="Subject"
-            className="flex-1 px-4 py-2 rounded"
-          />
-          <Button className="bg-[#FF4A17] hover:bg-[#FF4A17]/90 whitespace-nowrap">
-            Make An Appointment
-          </Button>
-        </div>
-      </div>
+      
     </>
   );
 }

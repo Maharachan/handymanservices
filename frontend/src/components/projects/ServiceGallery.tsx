@@ -1,90 +1,90 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
-import service1 from '@/assets/services/renovation-repairs1.jpg';
-import service2 from '@/assets/services/renovation-repairs2.jpg';
-import service3 from '@/assets/services/electrical-repairs1.jpg';
-import service4 from '@/assets/services/electrical-repairs2.jpg';
-import service5 from '@/assets/services/plumber-repairs1.jpg';
-import service6 from '@/assets/services/plumber-repairs2.jpg';
-import service7 from '@/assets/services/hvac-repairs1.jpg';
-import service8 from '@/assets/services/renovation-repairs2.jpg';
-import service9 from '@/assets/services/paint-repairs1.jpg';
-import service10 from '@/assets/services/paint-repairs2.jpg';
+
+// Optimized image URLs
+const renovation = [
+  "https://res.cloudinary.com/dia8x6y6u/image/upload/c_fill,h_300,w_400,q_auto,f_auto/v1740362869/IMG_0705_rjm0ci.jpg",
+  "https://res.cloudinary.com/dia8x6y6u/image/upload/c_fill,h_300,w_400,q_auto,f_auto/v1740362850/IMG_0720_xf7grs.jpg"
+];
+const electrical = [
+  "https://res.cloudinary.com/dia8x6y6u/image/upload/c_fill,h_300,w_400,q_auto,f_auto/v1740362876/IMG_0707_fy2emz.jpg",
+  "https://res.cloudinary.com/dia8x6y6u/image/upload/c_fill,h_300,w_400,q_auto,f_auto/v1740362865/IMG_0723_raqdkl.jpg"
+];
+const plumbing = [
+  "https://res.cloudinary.com/dia8x6y6u/image/upload/c_fill,h_300,w_400,q_auto,f_auto/v1740362861/IMG_0717_ztrjt3.jpg",
+  "https://res.cloudinary.com/dia8x6y6u/image/upload/c_fill,h_300,w_400,q_auto,f_auto/v1740361369/plumber-repairs1_e1pawt.jpg"
+];
+const hvac = [
+  "https://res.cloudinary.com/dia8x6y6u/image/upload/c_fill,h_300,w_300,q_auto/v1740362842/IMG_0730_aeehzh.jpg",
+  "https://res.cloudinary.com/dia8x6y6u/image/upload/c_fill,h_300,w_400,q_auto,f_auto/v1740362861/IMG_0716_tfflfk.jpg"
+];
+const painting = [
+  "https://res.cloudinary.com/dia8x6y6u/image/upload/c_fill,h_300,w_400,q_auto,f_auto/v1740361369/paint-repairs2_r5ybcq.jpg",
+  "https://res.cloudinary.com/dia8x6y6u/image/upload/c_fill,h_300,w_400,q_auto,f_auto/v1740361369/paint-repairs1_yawgul.jpg"
+];
 
 const categories = ["All", "Renovation", "Electrical", "Plumbing", "HVAC", "Painting"]
 
 const services = [
   {
     id: 1,
-    title: "Kitchen Renovation",
+    title: "Home Renovation",
     category: "Renovation",
-    image: service1,
+    image: renovation[0],
   },
   {
     id: 2,
     title: "Bathroom Renovation",
     category: "Renovation",
-    image: service2,
+    image: renovation[1],
   },
   {
     id: 3,
     title: "Electrical Installation",
     category: "Electrical",
-    image: service3,
+    image: electrical[0],
   },
   {
     id: 4,
-    title: "Circuit Repair",
+    title: "Kitchen Renovation",
     category: "Electrical",
-    image: service4,
+    image: electrical[1],
   },
   {
     id: 5,
     title: "Pipe Installation",
     category: "Plumbing",
-    image: service5,
+    image: plumbing[0],
   },
   {
     id: 6,
     title: "Drain Cleaning",
     category: "Plumbing",
-    image: service6,
+    image: plumbing[1],
   },
   {
     id: 7,
     title: "AC Installation",
     category: "HVAC",
-    image: service7,
+    image: hvac[0],
   },
   {
     id: 8,
-    title: "Home Renovation",
-    category: "Renovation",
-    image: service8,
+    title: "AC Repair",
+    category: "HVAC",
+    image: hvac[1],
   },
   {
     id: 9,
     title: "Interior Painting",
     category: "Painting",
-    image: service9,
+    image: painting[0],
   },
   {
     id: 10,
     title: "Wall Painting",
     category: "Painting",
-    image: service10,
-  },
-  {
-    id: 11,
-    title: "Complete Renovation",
-    category: "Renovation",
-    image: service1,
-  },
-  {
-    id: 12,
-    title: "Room Renovation",
-    category: "Renovation",
-    image: service2,
+    image: painting[1],
   },
 ]
 

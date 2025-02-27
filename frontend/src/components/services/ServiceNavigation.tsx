@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import breadcrumb from "@/assets/breadcrumb-service.jpg"
+const breadcrumb = "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740361276/breadcrumb-service_vxatpx.jpg"
 
 
 

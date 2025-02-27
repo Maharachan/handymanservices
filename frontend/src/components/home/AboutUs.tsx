@@ -6,7 +6,7 @@ export default function AboutUs() {
     <div className="container mx-auto px-4 py-12 grid md:grid-cols-2 gap-8 items-center">
       <div className="relative aspect-[4/3] w-full">
         <img
-          src="https://images.pexels.com/photos/8487375/pexels-photo-8487375.jpeg"
+          src="https://res.cloudinary.com/dia8x6y6u/image/upload/v1740364344/aboutus_fjy9wg.jpg"
           alt="Professional contractor with tools"
           className="rounded-lg h-full w-full object-cover"
         />

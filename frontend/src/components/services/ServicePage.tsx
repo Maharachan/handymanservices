@@ -1,16 +1,16 @@
 import React from 'react';
 import ServiceNavigation from './ServiceNavigation';
-import { Link } from 'react-router-dom';
-import service1 from '@/assets/services/renovation-repairs1.jpg';
-import service2 from '@/assets/services/renovation-repairs2.jpg';
-import service3 from '@/assets/services/electrical-repairs1.jpg';
-import service4 from '@/assets/services/electrical-repairs2.jpg';
-import service5 from '@/assets/services/plumber-repairs1.jpg';
-import service6 from '@/assets/services/plumber-repairs2.jpg';
-import service7 from '@/assets/services/hvac-repairs1.jpg';
-import service8 from '@/assets/services/renovation-repairs2.jpg';
-import service9 from '@/assets/services/paint-repairs1.jpg';
-import service10 from '@/assets/services/paint-repairs2.jpg';
+import { Link, useNavigate } from 'react-router-dom';
+const service1 = "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740361369/renovation-repairs1_bc767k.jpg"
+const service2 = "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740361372/renovation-repairs2_s8aso7.jpg"
+const service3 = "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740361370/electrical-repairs1_p8atem.jpg"
+const service4 = "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740361367/electrical-repairs2_tyjnka.jpg"
+const service5 = "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740361369/plumber-repairs1_e1pawt.jpg"
+const service6 = "https://res.cloudinary.com/dia8x6y6u/image/upload/c_crop,ar_16:9/v1740362525/IMG_0717_aqpppm.jpg"
+const service8 = "https://res.cloudinary.com/dia8x6y6u/image/upload/c_crop,ar_16:9/v1740362234/IMG_0716_h39mi2.jpg"
+const service7 = "https://res.cloudinary.com/dia8x6y6u/image/upload/c_fill,ar_4:3/v1740361962/IMG_0730_aubmgl.jpg"
+const service9 = "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740361369/paint-repairs1_yawgul.jpg"
+const service10 = "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740361369/paint-repairs2_r5ybcq.jpg"
 
 
 
@@ -139,9 +139,11 @@ const serviceData = {
   }
 };
 
+
 const ServicePage: React.FC<ServicePageProps> = ({ serviceId }) => {
   const services = Object.keys(serviceData).map((key) => serviceData[key as keyof typeof serviceData].title);
   const currentService = serviceId ? serviceData[serviceId as keyof typeof serviceData] : serviceData['renovation-services'];
+  const navigate = useNavigate();
 
   const features = [
     {
@@ -187,7 +189,7 @@ const ServicePage: React.FC<ServicePageProps> = ({ serviceId }) => {
                 
               ))}
               <div className="flex justify-center mt-4">
-              <Button className="bg-[#FF4A17] hover:bg-[#FF4A17]/90 text-white px-8">
+              <Button onClick={() => navigate("/contact")} className="bg-[#FF4A17] hover:bg-[#FF4A17]/90 text-white px-8">
                 Book A Service
               </Button>
               </div>

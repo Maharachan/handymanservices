@@ -2,8 +2,10 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
 import { MapPin, Mail, Facebook, Twitter, Instagram, Linkedin, Send } from "lucide-react"
+import { useNavigate } from "react-router-dom";
 
 export default function Footer() {
+  const navigate = useNavigate();
   return (
     <footer className="bg-[#1B1F3B] text-white py-8 md:py-16">
       <div className="container mx-auto px-4">
@@ -11,7 +13,7 @@ export default function Footer() {
           {/* Company Info Section */}
           <div className="space-y-6">
             <div className="flex items-center space-x-2">
-            <img src="/src/assets/logo.png" alt="Logo" className="w-8 h-8 mr-2" />
+            <img src="https://res.cloudinary.com/dia8x6y6u/image/upload/v1740361112/logo_gqosyt.png" alt="Logo" className="w-8 h-8 mr-2" />
               <span className="text-xl md:text-2xl font-semibold text-[#FF4A17]">Larreus repairs & Co LLC.</span>
             </div>
 
@@ -155,7 +157,7 @@ export default function Footer() {
                 <h4 className="font-semibold mb-2 text-sm md:text-base">GET A FREE ESTIMATE TODAY!</h4>
                 <p className="text-gray-400 text-xs md:text-sm mb-2">Call us for a cost estimate over the phone</p>
                 <p className="text-lg md:text-xl font-bold mb-4">903-807-8308</p>
-                <Button className="bg-[#FF6B00] hover:bg-[#FF6B00]/90 text-white w-full text-sm md:text-base">
+                <Button onClick={() => navigate("/contact")} className="bg-[#FF6B00] hover:bg-[#FF6B00]/90 text-white w-full text-sm md:text-base">
                   Request An Estimate
                 </Button>
               </div>

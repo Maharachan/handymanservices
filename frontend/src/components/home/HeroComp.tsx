@@ -1,19 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 const carouselImages = [
   {
     id: 1,
-    url: "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg",
+    url: "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740364232/hero1_jih9ox.jpg",
   },
   {
     id: 2,
-    url: "https://images.pexels.com/photos/3822850/pexels-photo-3822850.jpeg",
+    url: "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740364233/hero2_hj9hi2.jpg",
   },
   {
     id: 3,
-    url: "https://images.pexels.com/photos/8292797/pexels-photo-8292797.jpeg",
+    url: "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740364231/hero3_b1zgie.jpg",
   },
 ];
 
@@ -26,6 +27,8 @@ export default function Hero() {
     }, 5000);
     return () => clearInterval(timer);
   }, []);
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -63,10 +66,11 @@ export default function Hero() {
             small
           </p>
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-8">
-            <Button className="bg-[#FF4A17] hover:bg-[#FF4A17]/90 text-white px-8">
+            <Button onClick={() => navigate("/contact")} className="bg-[#FF4A17] hover:bg-[#FF4A17]/90 text-white px-8">
               Book A Service
             </Button>
             <Button
+              onClick={() => navigate("/contact")}
               variant="outline"
               className="bg-white hover:bg-gray-100 px-8"
             >

@@ -1,11 +1,11 @@
 import { ServiceCard } from "./service-card"
 import { useNavigate } from 'react-router-dom'
-import electricalServices from "@/assets/icons/electrical-service.png"
-import renovationServices from "@/assets/icons/home-repair.png"
-import plumbingServices from "@/assets/icons/plumbing-maintenance.png"
-import hvacServices from "@/assets/icons/HVAC-service.png"
-import paintingDrywall from "@/assets/icons/house-painting.png"
-import roofingServices from "@/assets/icons/roof-service.png"
+const electricalServices = "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740360608/electrical-service_ai29vi.png"
+const renovationServices = "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740360608/roof-service_lelmmb.png"
+const plumbingServices = "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740360608/plumbing-maintenance_qkuh3k.png"
+const hvacServices = "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740360608/HVAC-service_io2qhr.png"
+const paintingDrywall = "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740360608/house-painting_fknppt.png"
+const roofingServices = "https://res.cloudinary.com/dia8x6y6u/image/upload/v1740360608/home-repair_jmpdcp.png"
 
 const services = [
   {

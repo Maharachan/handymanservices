@@ -1,12 +1,96 @@
 "use client"
 
+import { useState } from "react"
 import { MapPin, Mail, Phone, ArrowUpRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { toast } from "sonner"
+import axios from "axios"
 
 export default function ContactPage() {
+  const [loading, setLoading] = useState(false)
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    service: "",
+    message: "",
+    date: "",
+    time: ""
+  })
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleServiceChange = (value: string) => {
+    setFormData(prev => ({ ...prev, service: value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.phone || !formData.service) {
+      toast.error("Please fill in all required fields", {
+        description: "Name, email, phone and service are required"
+      })
+      return
+    }
+    
+    // Set default date and time if not provided
+    const currentDate = new Date()
+    const defaultDate = currentDate.toISOString().split('T')[0]
+    const defaultTime = "10:00 AM"
+    
+    const bookingData = {
+      ...formData,
+      date: formData.date || defaultDate,
+      time: formData.time || defaultTime
+    }
+    
+    setLoading(true)
+
+    
+    try {
+      const response = await axios.post(`${backendUrl}/api/auth/thanks-for-booking`, bookingData)
+      
+      const data = response.data
+            
+      if (data.success) {
+        toast.success("Booking Successful", {
+          description: "We've received your booking request. Check your email for confirmation."
+        })
+        
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          service: "",
+          message: "",
+          date: "",
+          time: ""
+        })
+      } else {
+        toast.error("Booking Failed", {
+          description: data.message || "Something went wrong. Please try again."
+        })
+      }
+    } catch (error) {
+      toast.error("Error", {
+        description: "Failed to submit your booking. Please try again later."
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="w-full">
       {/* Map Section */}
@@ -78,18 +162,41 @@ export default function ContactPage() {
                 <p className="text-gray-600">Use the form below to get in touch with the sales team</p>
               </div>
 
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <Input placeholder="Your Name" />
+                    <Input 
+                      name="name"
+                      placeholder="Your Name" 
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
                   <div>
-                    <Input type="email" placeholder="Email address" />
+                    <Input 
+                      name="email"
+                      type="email" 
+                      placeholder="Email address" 
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
                 </div>
 
                 <div>
-                  <Select>
+                  <Input 
+                    name="phone"
+                    placeholder="Phone Number" 
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Select onValueChange={handleServiceChange} value={formData.service}>
                     <SelectTrigger>
                       <SelectValue placeholder="Choose Services" />
                     </SelectTrigger>
@@ -103,12 +210,42 @@ export default function ContactPage() {
                   </Select>
                 </div>
 
-                <div>
-                  <Textarea placeholder="Your message" className="min-h-[150px]" />
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <Input 
+                      name="date"
+                      type="date" 
+                      placeholder="Preferred Date" 
+                      value={formData.date}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <Input 
+                      name="time"
+                      placeholder="Preferred Time (e.g., 10:00 AM)" 
+                      value={formData.time}
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
 
-                <Button className="w-full bg-[#FF4A17] hover:bg-[#FF4A17]/90 text-white">
-                  Make An Appointment
+                <div>
+                  <Textarea 
+                    name="message"
+                    placeholder="Your message" 
+                    className="min-h-[150px]"
+                    value={formData.message}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <Button 
+                  type="submit"
+                  className="w-full bg-[#FF4A17] hover:bg-[#FF4A17]/90 text-white"
+                  disabled={loading}
+                >
+                  {loading ? "Processing..." : "Make An Appointment"}
                 </Button>
               </form>
             </div>
@@ -118,4 +255,5 @@ export default function ContactPage() {
     </div>
   )
 }
+
 

@@ -28,7 +28,7 @@ const Login = () => {
         if (data.success) {
           setIsLoggedIn(true)
           await getUserData()
-          navigate('/')
+          navigate('/email-verify')
         } else {
           toast.error(data.message)
         }

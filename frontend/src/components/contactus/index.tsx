@@ -1,95 +1,118 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { MapPin, Mail, Phone, ArrowUpRight } from "lucide-react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { toast } from "sonner"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form"
+import { toast } from "react-toastify"
 import axios from "axios"
+import { useNavigate } from "react-router-dom"
+import { useAuthStore } from "@/store/useAuthStore"
+
+
+const formSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(1, "Phone number is required"),
+  service: z.string().min(1, "Please select a service"),
+  message: z.string().optional(),
+  date: z.string().min(1, "Please select a date for your appointment"),
+  time: z.string().min(1, "Please select a time for your appointment"),
+})
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false)
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    service: "",
-    message: "",
-    date: "",
-    time: ""
+  const backendUrl = import.meta.env.VITE_BACKEND_URL
+  const navigate = useNavigate()
+  const { isLoggedIn, userData } = useAuthStore()
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      service: "",
+      message: "",
+      date: "",
+      time: "",
+    },
   })
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL
+  // Pre-fill form with user data if logged in
+  useEffect(() => {
+    if (isLoggedIn && userData) {
+      form.setValue("name", userData.name || "")
+      form.setValue("email", userData.email || "")
+      form.setValue("phone", userData.phone || "")
+    }
+  }, [isLoggedIn, userData, form])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
-
-  const handleServiceChange = (value: string) => {
-    setFormData(prev => ({ ...prev, service: value }))
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    // Basic validation
-    if (!formData.name || !formData.email || !formData.phone || !formData.service) {
-      toast.error("Please fill in all required fields", {
-        description: "Name, email, phone and service are required"
-      })
+  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+    // Check if user is logged in
+    if (!isLoggedIn) {
+      toast.info("Please log in to make an appointment")
+      navigate("/login", { state: { from: "/contact-us" } })
       return
     }
     
-    // Set default date and time if not provided
-    const currentDate = new Date()
-    const defaultDate = currentDate.toISOString().split('T')[0]
-    const defaultTime = "10:00 AM"
+    setLoading(true)
+    
+    // No need to format the date since it's already a string in yyyy-MM-dd format
+    const formattedDate = data.date
+    const formattedTime = data.time
     
     const bookingData = {
-      ...formData,
-      date: formData.date || defaultDate,
-      time: formData.time || defaultTime
+      ...data,
+      date: formattedDate,
+      time: formattedTime,
     }
-    
-    setLoading(true)
-
     
     try {
       const response = await axios.post(`${backendUrl}/api/auth/thanks-for-booking`, bookingData)
-      
-      const data = response.data
+      console.log(response)
+      const responseData = response.data.success
+
             
-      if (data.success) {
-        toast.success("Booking Successful", {
-          description: "We've received your booking request. Check your email for confirmation."
-        })
+      if (responseData === true) {
+        toast.success("Booking Successful! We've received your booking request. Check your email for confirmation.")
         
         // Reset form
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          service: "",
-          message: "",
-          date: "",
-          time: ""
-        })
+        form.reset()
       } else {
-        toast.error("Booking Failed", {
-          description: data.message || "Something went wrong. Please try again."
-        })
+        const errorMessage = response.data.message || "Something went wrong. Please try again."
+        toast.error(`Booking Failed: ${errorMessage}`)
       }
     } catch (error) {
-      toast.error("Error", {
-        description: "Failed to submit your booking. Please try again later."
-      })
+      console.error("Booking submission error:", error)
+      toast.error("Error: Failed to submit your booking. Please try again later.")
     } finally {
       setLoading(false)
     }
   }
+
+  // Add a login button component
+  const LoginButton = () => (
+    <Button
+      type="button"
+      onClick={() => navigate("/login", { state: { from: "/contact-us" } })}
+      className="w-full bg-[#FF4A17] hover:bg-[#FF4A17]/90 text-white"
+    >
+      Log in to Make an Appointment
+    </Button>
+  )
 
   return (
     <div className="w-full">
@@ -162,92 +185,143 @@ export default function ContactPage() {
                 <p className="text-gray-600">Use the form below to get in touch with the sales team</p>
               </div>
 
-              <form className="space-y-4" onSubmit={handleSubmit}>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <Input 
-                      name="name"
-                      placeholder="Your Name" 
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
+              {!isLoggedIn ? (
+                <div className="bg-orange-50 p-6 rounded-lg border border-orange-100">
+                  <h3 className="text-lg font-medium mb-4 text-gray-800">Login Required</h3>
+                  <p className="text-gray-600 mb-6">
+                    Please log in to your account to make an appointment with our team.
+                  </p>
+                  <LoginButton />
+                </div>
+              ) : (
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input placeholder="Your Name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input type="email" placeholder="Email address" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input placeholder="Phone Number" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </div>
-                  <div>
-                    <Input 
-                      name="email"
-                      type="email" 
-                      placeholder="Email address" 
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
+
+                    <FormField
+                      control={form.control}
+                      name="service"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Choose Services" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="renovation">Renovation Services</SelectItem>
+                              <SelectItem value="electrical">Electrical Services</SelectItem>
+                              <SelectItem value="plumbing">Plumbing Services</SelectItem>
+                              <SelectItem value="hvac">HVAC Services</SelectItem>
+                              <SelectItem value="painting">Painting and Drywall</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </div>
-                </div>
 
-                <div>
-                  <Input 
-                    name="phone"
-                    placeholder="Phone Number" 
-                    value={formData.phone}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <FormField
+                        control={form.control}
+                        name="date"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input 
+                                type="date" 
+                                placeholder="Preferred Date" 
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="time"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input 
+                                type="time" 
+                                placeholder="Preferred Time" 
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                <div>
-                  <Select onValueChange={handleServiceChange} value={formData.service}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choose Services" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="renovation">Renovation Services</SelectItem>
-                      <SelectItem value="electrical">Electrical Services</SelectItem>
-                      <SelectItem value="plumbing">Plumbing Services</SelectItem>
-                      <SelectItem value="hvac">HVAC Services</SelectItem>
-                      <SelectItem value="painting">Painting and Drywall</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <Input 
-                      name="date"
-                      type="date" 
-                      placeholder="Preferred Date" 
-                      value={formData.date}
-                      onChange={handleChange}
+                    <FormField
+                      control={form.control}
+                      name="message"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="Your message" 
+                              className="min-h-[150px]"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </div>
-                  <div>
-                    <Input 
-                      name="time"
-                      placeholder="Preferred Time (e.g., 10:00 AM)" 
-                      value={formData.time}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
 
-                <div>
-                  <Textarea 
-                    name="message"
-                    placeholder="Your message" 
-                    className="min-h-[150px]"
-                    value={formData.message}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <Button 
-                  type="submit"
-                  className="w-full bg-[#FF4A17] hover:bg-[#FF4A17]/90 text-white"
-                  disabled={loading}
-                >
-                  {loading ? "Processing..." : "Make An Appointment"}
-                </Button>
-              </form>
+                    <Button 
+                      type="submit"
+                      className="w-full bg-[#FF4A17] hover:bg-[#FF4A17]/90 text-white"
+                      disabled={loading}
+                    >
+                      {loading ? "Processing..." : "Make An Appointment"}
+                    </Button>
+                  </form>
+                </Form>
+              )}
             </div>
           </div>
         </div>

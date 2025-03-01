@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -11,8 +11,43 @@ import Footer from '@/components/Footer'
 const EmailVerify = () => {
   const navigate = useNavigate()
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
-  const { isLoggedIn, userData, getUserData, isLoading } = useAuthStore()
+  const { isLoggedIn, userData, getUserData, isLoading, sendVerificationOtp } = useAuthStore()
   const backendUrl = import.meta.env.VITE_BACKEND_URL
+  
+  // Add state for OTP sent status and timer
+  const [otpSent, setOtpSent] = useState(false)
+  const [countdown, setCountdown] = useState(0)
+  const [isResending, setIsResending] = useState(false)
+
+  const sendOtp = async () => {
+    setIsResending(true)
+    const success = await sendVerificationOtp();
+    setIsResending(false)
+    
+    if (success) {
+      setOtpSent(true)
+      toast.success("Enter the 6-digit code sent to your email")
+      // Start countdown for 60 seconds
+      setCountdown(60)
+    } else {
+      toast.error("Failed to send verification code. Please try again.")
+    }
+  }
+  
+  // Countdown timer effect
+  useEffect(() => {
+    let timer: number | undefined;
+    
+    if (countdown > 0) {
+      timer = window.setInterval(() => {
+        setCountdown(prevCount => prevCount - 1)
+      }, 1000)
+    }
+    
+    return () => {
+      if (timer) clearInterval(timer)
+    }
+  }, [countdown])
 
   useEffect(() => {
     if (!isLoading) {
@@ -20,9 +55,12 @@ const EmailVerify = () => {
         navigate('/login', { replace: true })
       } else if (userData?.isAccountVerified) {
         navigate('/', { replace: true })
+      } else if (!otpSent && userData?.email) {
+        // Auto-send OTP when component loads if user is logged in but not verified
+        sendOtp()
       }
     }
-  }, [isLoading, isLoggedIn, userData, navigate])
+  }, [isLoading, isLoggedIn, userData, navigate, otpSent])
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     if (e.target.value.length > 0 && index < inputRefs.current.length - 1) {
@@ -76,7 +114,7 @@ const EmailVerify = () => {
         toast.error('Session expired. Please login again.')
         navigate('/login', { replace: true })
       } else {
-        toast.error(error.message || 'Failed to verify email')
+        toast.error(error.response?.data?.message || 'Failed to verify email')
       }
     }
   }
@@ -99,33 +137,67 @@ const EmailVerify = () => {
                 Verify Your Email
               </h2>
               <p className="mt-2 text-center text-sm text-gray-600">
-                Enter the 6-digit code sent to your email
+                {otpSent 
+                  ? `Enter the 6-digit code sent to ${userData?.email}`
+                  : "Click the button below to send a verification code to your email"
+                }
               </p>
             </div>
 
-            <form onSubmit={onSubmitHandler} className="mt-8 space-y-6">
-              <div className="flex justify-between gap-2" onPaste={handlePaste}>
-                {Array(6).fill(0).map((_, index) => (
-                  <input
-                    key={index}
-                    type="text"
-                    maxLength={1}
-                    ref={el => inputRefs.current[index] = el}
-                    onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleInput(e, index)}
-                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleKeyDown(e, index)}
-                    className="w-12 h-12 text-center border-gray-300 rounded-md text-lg focus:ring-[#FF4A17] focus:border-[#FF4A17]"
-                    required
-                  />
-                ))}
-              </div>
+            {otpSent ? (
+              <form onSubmit={onSubmitHandler} className="mt-8 space-y-6">
+                <div className="flex justify-between gap-2" onPaste={handlePaste}>
+                  {Array(6).fill(0).map((_, index) => (
+                    <input
+                      key={index}
+                      type="text"
+                      maxLength={1}
+                      ref={el => inputRefs.current[index] = el}
+                      onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleInput(e, index)}
+                      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleKeyDown(e, index)}
+                      className="w-12 h-12 text-center border-gray-300 rounded-md text-lg focus:ring-[#FF4A17] focus:border-[#FF4A17]"
+                      required
+                    />
+                  ))}
+                </div>
 
-              <button
-                type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#FF4A17] hover:bg-[#ff4a17]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF4A17]"
-              >
-                Verify Email
-              </button>
-            </form>
+                <div className="flex flex-col space-y-4">
+                  <button
+                    type="submit"
+                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#FF4A17] hover:bg-[#ff4a17]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF4A17]"
+                  >
+                    Verify Email
+                  </button>
+                  
+                  <div className="text-center">
+                    {countdown > 0 ? (
+                      <p className="text-sm text-gray-600">
+                        Resend code in {countdown} seconds
+                      </p>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={sendOtp}
+                        disabled={isResending}
+                        className="text-sm text-[#FF4A17] hover:underline focus:outline-none disabled:opacity-50"
+                      >
+                        {isResending ? "Sending..." : "Resend verification code"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </form>
+            ) : (
+              <div className="mt-8">
+                <button
+                  onClick={sendOtp}
+                  disabled={isResending}
+                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#FF4A17] hover:bg-[#ff4a17]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF4A17] disabled:opacity-70"
+                >
+                  {isResending ? "Sending..." : "Send Verification Code"}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

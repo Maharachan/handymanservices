@@ -32,7 +32,7 @@ const Navbar = () => {
 
   return (
     <nav className="border-b hidden md:block">
-      <div className="container mx-auto flex justify-between items-center py-4">
+      <div className="container mx-auto flex justify-between items-center py-4 px-10">
         <div className="flex gap-8 items-center">
           <Link 
             to="/" 

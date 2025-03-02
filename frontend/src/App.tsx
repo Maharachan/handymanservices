@@ -13,7 +13,7 @@ const App = () => {
 
   return (
     <div>
-      <ToastContainer />
+      <ToastContainer position="top-right" autoClose={3000} />
       <RouterProvider router={router} />
     </div>
   )

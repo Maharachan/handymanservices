@@ -7,7 +7,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { isLoggedIn, userData, logout, sendVerificationOtp } = useAuthStore();
+  const { isLoggedIn, userData, logout} = useAuthStore();
 
   const handleLogout = async () => {
     await logout();
@@ -15,10 +15,7 @@ const Navbar = () => {
   };
 
   const handleVerifyEmail = async () => {
-    const success = await sendVerificationOtp();
-    if (success) {
-      navigate('/email-verify');
-    }
+    navigate('/email-verify');
     setIsDropdownOpen(false);
   };
 

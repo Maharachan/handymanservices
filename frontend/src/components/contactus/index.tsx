@@ -56,7 +56,9 @@ export default function ContactPage() {
     if (isLoggedIn && userData) {
       form.setValue("name", userData.name || "")
       form.setValue("email", userData.email || "")
-      form.setValue("phone", userData.phone || "")
+      if ('phone' in userData) {
+        form.setValue("phone", String(userData.phone) || "")
+      }
     }
   }, [isLoggedIn, userData, form])
 
